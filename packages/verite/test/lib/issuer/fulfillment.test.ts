@@ -28,7 +28,9 @@ describe("buildAndSignKycAmlFulfillment", () => {
 
     const encodedFulfillment = await buildAndSignFulfillment(
       issuer,
-      decodedApplication,
+      decodedApplication.holder,
+      decodedApplication.credential_application.manifest_id,
+      decodedApplication.presentation_submission,
       kycAmlAttestationFixture,
       { credentialStatus: revocationListFixture }
     )

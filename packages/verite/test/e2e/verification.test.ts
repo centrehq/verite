@@ -53,7 +53,7 @@ describe("verification", () => {
     // 4. VERIFIER: Verifies submission
     await validateVerificationSubmission(
       encodedSubmission,
-      kycRequest.body.presentation_definition
+      kycRequest.body.presentation_definition.input_descriptors
     )
   })
 })
@@ -75,7 +75,9 @@ async function getClientVerifiableCredential(
 
   const fulfillment = await buildAndSignFulfillment(
     issuer,
-    application,
+    application.holder,
+    application.credential_application.manifest_id,
+    application.presentation_submission,
     kycAmlAttestationFixture,
     { credentialStatus: revocationListFixture }
   )

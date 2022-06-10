@@ -53,7 +53,9 @@ describe("issuance", () => {
      */
     const fulfillment = await buildAndSignFulfillment(
       issuer,
-      credentialApplication,
+      credentialApplication.holder,
+      credentialApplication.credential_application.manifest_id,
+      credentialApplication.presentation_submission,
       kycAmlAttestationFixture,
       { credentialStatus: revocationListFixture }
     )
@@ -147,7 +149,9 @@ describe("issuance", () => {
      */
     const fulfillment = await buildAndSignFulfillment(
       issuer,
-      credentialApplication,
+      credentialApplication.holder,
+      credentialApplication.credential_application.manifest_id,
+      credentialApplication.presentation_submission,
       kycAmlAttestationFixture,
       { credentialStatus: revocationListFixture }
     )

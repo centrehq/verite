@@ -15,7 +15,8 @@ import type {
   CreditScoreAttestation,
   CredentialPayload,
   DidKey,
-  JWT
+  JWT,
+  PresentationSubmission
 } from "../../types"
 import type {
   CreateCredentialOptions,
@@ -60,14 +61,16 @@ export async function buildAndSignVerifiableCredential(
  */
 export async function buildAndSignFulfillment(
   signer: Issuer,
-  application: DecodedCredentialApplication,
+  holder: string,
+  credentialManifestId: string, 
+  presentationSubmission: PresentationSubmission | undefined,
   attestation: KYCAMLAttestation | CreditScoreAttestation,
   payload: Partial<CredentialPayload> = {},
   options?: CreatePresentationOptions
 ): Promise<EncodedCredentialFulfillment> {
   const encodedCredentials = await buildAndSignVerifiableCredential(
     signer,
-    application.holder,
+    holder,
     attestation,
     payload
   )
@@ -81,9 +84,9 @@ export async function buildAndSignFulfillment(
     {
       credential_fulfillment: {
         id: uuidv4(),
-        manifest_id: application.credential_application.manifest_id,
+        manifest_id: credentialManifestId,
         descriptor_map:
-          application.presentation_submission?.descriptor_map?.map<DescriptorMap>(
+        presentationSubmission?.descriptor_map?.map<DescriptorMap>(
             (d, i) => {
               return {
                 id: d.id,

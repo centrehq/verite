@@ -43,7 +43,9 @@ describe("Submission validator", () => {
 
     const fulfillment = await buildAndSignFulfillment(
       issuer,
-      application,
+      application.holder,
+      application.credential_application.manifest_id,
+      application.presentation_submission,
       kycAmlAttestationFixture,
       { credentialStatus: revocationListFixture }
     )
@@ -68,7 +70,7 @@ describe("Submission validator", () => {
     await expect(
       validateVerificationSubmission(
         submission,
-        verificationRequest.body.presentation_definition
+        verificationRequest.body.presentation_definition.input_descriptors
       )
     ).resolves.not.toThrow()
   })
@@ -89,7 +91,9 @@ describe("Submission validator", () => {
 
     const fulfillment = await buildAndSignFulfillment(
       issuer,
-      application,
+      application.holder,
+      application.credential_application.manifest_id,
+      application.presentation_submission,
       creditScoreAttestationFixture
     )
 
@@ -114,7 +118,7 @@ describe("Submission validator", () => {
     await expect(
       validateVerificationSubmission(
         submission,
-        verificationRequest.body.presentation_definition
+        verificationRequest.body.presentation_definition.input_descriptors
       )
     ).resolves.not.toThrow()
   })
@@ -135,7 +139,9 @@ describe("Submission validator", () => {
 
     const fulfillment = await buildAndSignFulfillment(
       issuer,
-      application,
+      application.holder,
+      application.credential_application.manifest_id,
+      application.presentation_submission,
       kycAmlAttestationFixture,
       { credentialStatus: revocationListFixture }
     )
@@ -180,7 +186,9 @@ describe("Submission validator", () => {
 
     const fulfillment = await buildAndSignFulfillment(
       issuer,
-      application,
+      application.holder,
+      application.credential_application.manifest_id,
+      application.presentation_submission,
       creditScoreAttestationFixture
     )
 
@@ -226,7 +234,9 @@ describe("Submission validator", () => {
 
     const fulfillment = await buildAndSignFulfillment(
       issuer,
-      application,
+      application.holder,
+      application.credential_application.manifest_id,
+      application.presentation_submission,
       kycAmlAttestationFixture,
       { credentialStatus: revocationListFixture }
     )
@@ -272,7 +282,9 @@ describe("Submission validator", () => {
 
     const fulfillment = await buildAndSignFulfillment(
       issuer,
-      application,
+      application.holder,
+      application.credential_application.manifest_id,
+      application.presentation_submission,
       kycAmlAttestationFixture,
       { credentialStatus: revocationListFixture }
     )
@@ -313,7 +325,7 @@ async function expectValidationError(
   try {
     await validateVerificationSubmission(
       submission,
-      verificationRequest.body.presentation_definition
+      verificationRequest.body.presentation_definition.input_descriptors
     )
   } catch (e) {
     error = e as ValidationError

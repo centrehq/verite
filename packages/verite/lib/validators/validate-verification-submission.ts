@@ -109,12 +109,12 @@ function validateInputDescriptors(
  */
 function mapInputsToDescriptors(
   submission: DecodedPresentationSubmission | DecodedCredentialApplication,
-  definition?: PresentationDefinition
+  inputDescriptors?: InputDescriptor[] | undefined
 ): Map<string, Verifiable<W3CCredential>[]> {
   const descriptorMap = submission.presentation_submission?.descriptor_map ?? []
 
   return descriptorMap.reduce((map, d) => {
-    const match = definition?.input_descriptors.find((id) => id.id === d.id)
+    const match = inputDescriptors?.find((id) => id.id === d.id)
 
     if (!match) {
       return map
@@ -215,14 +215,10 @@ function validateCredentialAgainstSchema(
  */
 async function ensureHolderIsSubject(
   credentialMap: Map<string, Verifiable<W3CCredential>[]>,
-  presentation: Verifiable<W3CPresentation>,
-  definition: PresentationDefinition
+  holder: string,
+  inputDescriptors: InputDescriptor[]
 ): Promise<void> {
-  if (!presentation.verifiableCredential) {
-    throw new ValidationError("No Credential", "No Verifiable Credential Given")
-  }
-
-  definition.input_descriptors.forEach((descriptor) => {
+  inputDescriptors.forEach((descriptor) => {
     // Each input descriptor can have an is_holder property.
     const isHolders = descriptor.constraints?.is_holder
     if (isHolders) {
@@ -238,7 +234,6 @@ async function ensureHolderIsSubject(
             const credentials = credentialMap.get(descriptor.id)
             credentials?.forEach((credential) => {
               const value = findFirstMatchingPathForField(field, credential)
-              const holder = presentation.holder
               if (holder !== value) {
                 throw new ValidationError(
                   "Invalid Credential",
@@ -258,7 +253,7 @@ async function ensureHolderIsSubject(
  */
 export async function validateVerificationSubmission(
   submission: JWT,
-  definition: PresentationDefinition,
+  inputDescriptors: InputDescriptor[],
   options?: VerifyPresentationOptions
 ): Promise<void> {
   const presentation = await decodeVerifiablePresentation(submission, options)
@@ -281,13 +276,13 @@ export async function validateVerificationSubmission(
    */
   ensureNotExpired(presentation)
 
-  const credentialMap = mapInputsToDescriptors(presentation, definition)
+  const credentialMap = mapInputsToDescriptors(presentation, inputDescriptors)
   /**
    * Check that the Verified Presentation was signed by the subject of the
    * Verified Credential. This ensures that the person submitting the
    * Presentation is the credential subject.
    */
-  await ensureHolderIsSubject(credentialMap, presentation, definition)
+  await ensureHolderIsSubject(credentialMap, presentation.holder, inputDescriptors)
 
   /**
    * Check the verifiable credentials to ensure they meet the requirements
@@ -295,10 +290,10 @@ export async function validateVerificationSubmission(
    * the credential is signed by a trusted signer, and meets the minimum
    * requirements set forth in the request (e.g. minimum credit score).
    */
-  validateInputDescriptors(credentialMap, definition.input_descriptors)
+  validateInputDescriptors(credentialMap, inputDescriptors)
 
   /**
    * Validate that each credential matches the expected schema
    */
-  validateCredentialAgainstSchema(credentialMap, definition.input_descriptors)
+  validateCredentialAgainstSchema(credentialMap, inputDescriptors)
 }

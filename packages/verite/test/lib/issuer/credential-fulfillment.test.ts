@@ -121,7 +121,9 @@ describe("buildAndSignFulfillment", () => {
     const attestation = kycAmlAttestationFixture
     const encodedFulfillment = await buildAndSignFulfillment(
       issuer,
-      application,
+      application.holder,
+      application.credential_application.manifest_id,
+      application.presentation_submission,
       attestation
     )
 
