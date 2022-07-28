@@ -1,0 +1,23 @@
+{
+  "$ref": "#/definitions/KYCAccInvAttestation",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "KYCAccInvAttestation": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "KYCAccInvAttestation",
+          "type": "string"
+        },
+        "process": {
+          "type": "string"
+        },
+        "approvalDate": {
+          "type": "string"
+        }
+      },
+      "required": ["type", "process", "approvalDate"],
+      "type": "object"
+    }
+  }
+}

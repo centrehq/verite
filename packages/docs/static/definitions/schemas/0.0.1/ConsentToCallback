@@ -1,0 +1,52 @@
+{
+  "$ref": "#/definitions/ConsentToCallback",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "Callback": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "Callback",
+          "type": "string"
+        },
+        "endpoint": {
+          "type": "string"
+        },
+        "chain": {
+          "type": "string"
+        },
+        "proof": {
+          "type": "string"
+        }
+      },
+      "required": ["type", "chain", "address", "proof"],
+      "type": "object"
+    },
+    "AuthorizationObject": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "authorizedResources",
+          "type": "object"
+        },
+        "resourceURLs": {
+          "type": "object"
+        },
+        "subjectIdentifier": {
+          "type": "string"
+        },
+        "fullname": {
+          "type": "boolean"
+        },
+        "zipCode": {
+          "type": "boolean"
+        },
+        "zipCode-Country": {
+          "type": "boolean"
+        }
+      },
+      "required": ["type", "score", "scoreType", "provider"],
+      "type": "object"
+    }
+  }
+}

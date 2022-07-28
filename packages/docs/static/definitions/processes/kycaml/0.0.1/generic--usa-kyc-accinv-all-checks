@@ -1,0 +1,20 @@
+{
+    "processName": "Accredited Investor",
+    "country": "USA",
+    "subjectType": "Individual",
+    "version": "0.0.1",
+    "basicChecks": [
+      "Legal Name",
+      "Date of Birth",
+      "Address",
+      "Government-issued Photo ID",
+      "Tax ID",
+      "Occupation",
+      "Source of Funds"
+    ],
+    "elegibilityChecks": [
+      "Assets",
+      "Income",
+      "Licensing"
+    ]
+  }
